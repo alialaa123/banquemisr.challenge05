@@ -11,7 +11,7 @@ import SwiftUI
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    var appMainCoordinator: MainCoordinator?
+    var appMainCoordinator: AppMainCoordinator?
     
     func application(
         _ application: UIApplication,
@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
         let appMainDependencyContainer = DefaultAppMainDependencyContainer()
         
-        appMainCoordinator = MainCoordinator(
+        appMainCoordinator = AppMainCoordinator(
             window: window,
             dependencyContainer: appMainDependencyContainer
         )

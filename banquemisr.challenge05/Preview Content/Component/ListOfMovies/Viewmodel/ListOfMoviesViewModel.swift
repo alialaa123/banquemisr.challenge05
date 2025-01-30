@@ -8,6 +8,12 @@
 import Foundation
 
 class ListOfMoviesViewModel: ObservableObject {
+    // MARK: - Properties
+    @Published var tabs = ["Now Playing", "Popular", "Upcoming"]
+    @Published var selectedTab: String = "Now Playing"
     
+    // MARK: - Life cycle
     init() { }
+    
+    // MARK: - Methods
 }

@@ -13,13 +13,17 @@ struct ListOfMoviesView: View {
     
     // MARK: - View
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("banquemisr.challenge05")
+        VStack(alignment: .leading, spacing: 16) {
+            AppMainHeaderView(headerTitle: "BanqueMisr Entertainment")
+            
+            ListSwitcherView(
+                tabs: $viewModel.tabs,
+                selectedTab: $viewModel.selectedTab
+            )
+            
+            Spacer()
         }
-        .padding()
+        .padding(.horizontal)
     }
 }
 
