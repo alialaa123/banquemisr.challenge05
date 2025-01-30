@@ -27,6 +27,9 @@
 		F1276D5F2D4A748D005E283C /* banquemisr.challenge05.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = banquemisr.challenge05.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1276D6F2D4A7490005E283C /* banquemisr.challenge05Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = banquemisr.challenge05Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1276D792D4A7490005E283C /* banquemisr.challenge05UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = banquemisr.challenge05UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1276D8C2D4B4C8B005E283C /* NetworkLayer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NetworkLayer; sourceTree = "<group>"; };
+		F1276D8D2D4B4CA6005E283C /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
+		F1276D8E2D4B4CC6005E283C /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +78,9 @@
 		F1276D562D4A748D005E283C = {
 			isa = PBXGroup;
 			children = (
+				F1276D8E2D4B4CC6005E283C /* Domain */,
+				F1276D8D2D4B4CA6005E283C /* Data */,
+				F1276D8C2D4B4C8B005E283C /* NetworkLayer */,
 				F1276D612D4A748D005E283C /* banquemisr.challenge05 */,
 				F1276D722D4A7490005E283C /* banquemisr.challenge05Tests */,
 				F1276D7C2D4A7490005E283C /* banquemisr.challenge05UITests */,
