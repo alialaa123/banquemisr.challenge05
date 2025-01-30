@@ -1,4 +1,6 @@
 
+import Foundation
+
 public final class APIClient: NetworkClient {
     // MARK: - Properties
     private let baseURL: String
@@ -18,7 +20,7 @@ public final class APIClient: NetworkClient {
     
     // MARK: - Methods
     /// Helper func for build URL Request
-    private func buildURLRequest<T: APIResquest>(from request: T) throws -> URLRequest {
+    private func buildURLRequest<T: APIRequest>(from request: T) throws -> URLRequest {
         guard var urlComponents = URLComponents(string: baseURL + request.path) else {
             throw NetworkError.invalidURL
         }
@@ -50,13 +52,13 @@ public final class APIClient: NetworkClient {
     }
     
     /// Request response validation
-    private func validate(response: HTTPURLResponse, data: Data) throws {
-        guard let httpResponse = response else {
+    private func validate(response: URLResponse, data: Data) throws {
+        guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.noData
         }
         
         switch httpResponse.statusCode {
-        case 200..299: return
+        case 200...299: return
         case 401: throw NetworkError.unauthorized
         default:
             let message = String(data: data, encoding: .utf8) ?? "Unknown error"
@@ -74,10 +76,10 @@ public final class APIClient: NetworkClient {
     }
     
     /// Request Implementation
-    public func send<T: APIResquest>(_ request: T) async throws -> T.Response {
+    public func send<T: APIRequest>(_ request: T) async throws -> T.Response {
         let urlRequest = try buildURLRequest(from: request)
         let (data, response) = try await session.data(for: urlRequest)
-        try validate(response: response as HTTPURLResponse, data: data)
+        try validate(response: response, data: data)
         return try decode(data: data, for: T.Response.self)
     }
     

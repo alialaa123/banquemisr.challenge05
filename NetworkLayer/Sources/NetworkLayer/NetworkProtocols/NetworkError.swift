@@ -1,4 +1,6 @@
 
+import Foundation
+
 // MARK: - Error handling
 public enum NetworkError: Error, LocalizedError {
     /// Error cases
