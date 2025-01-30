@@ -11,15 +11,21 @@ import SwiftUI
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
+    var appMainCoordinator: MainCoordinator?
     
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         let window = UIWindow(frame: UIScreen.main.bounds)
-        let rootView = ContentView()
+        let appMainDependencyContainer = DefaultAppMainDependencyContainer()
         
-        window.rootViewController = UIHostingController(rootView: rootView)
+        appMainCoordinator = MainCoordinator(
+            window: window,
+            dependencyContainer: appMainDependencyContainer
+        )
+        
+        appMainCoordinator?.start()
         window.makeKeyAndVisible()
 
         self.window = window

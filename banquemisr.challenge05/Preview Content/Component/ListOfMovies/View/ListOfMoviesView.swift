@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  ListOfMoviesView.swift
 //  banquemisr.challenge05
 //
 //  Created by ali alaa on 29/01/2025.
@@ -7,7 +7,11 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct ListOfMoviesView: View {
+    // MARK: - State property
+    @StateObject var viewModel: ListOfMoviesViewModel
+    
+    // MARK: - View
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -20,5 +24,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ListOfMoviesView(viewModel: ListOfMoviesViewModel())
 }
