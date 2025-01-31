@@ -1,5 +1,5 @@
 //
-//  ListOfMovies.swift
+//  Movie.swift
 //  Domain
 //
 //  Created by ali alaa on 30/01/2025.
@@ -11,13 +11,13 @@ import Foundation
 // which will need to make compiler to check for the model to be
 // sure it can be shared across actors.
 // sendable: to make sure it can safely cross actor boundaries.
-public struct ListOfMovies: Sendable, Hashable, Equatable {
+public struct Movie: Sendable, Hashable, Equatable {
     // MARK: - Properties
     public let id: Int
     public let movieTitle: String
     private let movieImage: String
     
-    public static func == (lhs: ListOfMovies, rhs: ListOfMovies) -> Bool {
+    public static func == (lhs: Movie, rhs: Movie) -> Bool {
         lhs.id == rhs.id && lhs.movieTitle == rhs.movieTitle && lhs.movieImage == rhs.movieImage
     }
     

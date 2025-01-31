@@ -1,7 +1,7 @@
 
 import Domain
 
-public struct ListOfMoviesDTO: Decodable {
+public struct MovieDTO: Decodable {
     // MARK: - Properties
     public let id: Int
     public var movieTitle: String?
@@ -15,8 +15,8 @@ public struct ListOfMoviesDTO: Decodable {
     }
     
     // MARK: - Methods
-    public func toDomain() -> ListOfMovies {
-        ListOfMovies(
+    public func toDomain() -> Movie {
+        Movie(
             id: self.id,
             movieTitle: self.movieTitle ?? "No Title",
             movieImage: self.movieImage ?? ""

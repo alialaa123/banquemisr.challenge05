@@ -10,9 +10,10 @@ import Domain
 
 struct GridOfMoviesListView: View {
     // MARK: - Properties
-    @Binding var listOfMovies: [ListOfMovies]?
+    @Binding var listOfMovies: [Movie]?
+    @Binding var movieSelected: Movie?
     let gridItems = Array(repeating: GridItem(.flexible(minimum: 80)), count: 3)
-    let loadNextPage: () -> Void
+    @Binding var loadNextPage: Bool
     
     // MARK: - View
     var body: some View {
@@ -21,9 +22,12 @@ struct GridOfMoviesListView: View {
                 LazyVGrid(columns: gridItems, spacing: 12) {
                     ForEach(Array(listOfMovies.enumerated()), id: \.element.id) { index, movie in
                         MoviePosterView(moviePoster: movie.getImageURL)
+                            .onTapGesture {
+                                movieSelected = movie
+                            }
                             .onAppear {
                                 if index == listOfMovies.count - 1 {
-                                    loadNextPage()
+                                    loadNextPage = true
                                 }
                             }
                     }

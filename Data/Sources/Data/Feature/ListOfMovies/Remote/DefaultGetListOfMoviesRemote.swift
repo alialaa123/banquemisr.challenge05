@@ -13,7 +13,7 @@ public final class DefaultGetGoldenPinBookingRemote: ListOfMoviesRepository {
     }
     
     // MARK: - Methods
-    public func getListOfMovies(with listType: String, page: Int) async throws -> [ListOfMovies] {
+    public func getListOfMovies(with listType: String, page: Int) async throws -> [Movie] {
         let queryParameters = ["page": String(page)]
         let request = ListOfMoviesRequest(path: listType, queryParameters: queryParameters)
         let listOfMoviesResponseDTO = try await client.sendWithRetry(request)

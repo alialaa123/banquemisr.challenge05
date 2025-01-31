@@ -9,5 +9,5 @@ import Foundation
 
 public struct ListOfMoviesResponseDTO: Decodable {
     public let page: Int
-    public let results: [ListOfMoviesDTO]
+    public let results: [MovieDTO]
 }

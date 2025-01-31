@@ -24,9 +24,11 @@ struct ListOfMoviesView: View {
             )
             
             // Grid of movies poster
-            GridOfMoviesListView(listOfMovies: $viewModel.listOfMovies) {
-                viewModel.loadNextPage()
-            }
+            GridOfMoviesListView(
+                listOfMovies: $viewModel.listOfMovies,
+                movieSelected: $viewModel.movieSelected,
+                loadNextPage: $viewModel.isLoadNextPage
+            )
             
             // Error view if found
             if viewModel.shouldShowError {
