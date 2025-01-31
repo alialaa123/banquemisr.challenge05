@@ -10,7 +10,7 @@ import SwiftUI
 struct MoviePosterView: View {
     // MARK: - Properties
     var moviePoster: URL?
-    var posterHeight: CGFloat = 180
+    var posterHeight: CGFloat = 160
     
     // MARK: - View
     var body: some View {
@@ -23,19 +23,19 @@ struct MoviePosterView: View {
             case .success(let image):
                 image
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .frame(maxWidth: .infinity)
                     .frame(height: posterHeight)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
             case .failure:
                 Image(systemName: "photo")
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .frame(maxWidth: .infinity)
                     .frame(height: posterHeight)
                     .foregroundColor(.gray)
                     .background(Color.gray.opacity(0.2))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
             @unknown default:
                 EmptyView()
             }

@@ -12,7 +12,7 @@ struct GridOfMoviesListView: View {
     // MARK: - Properties
     @Binding var listOfMovies: [Movie]?
     @Binding var movieSelected: Movie?
-    let gridItems = Array(repeating: GridItem(.flexible(minimum: 80)), count: 3)
+    let gridItems = Array(repeating: GridItem(.flexible(minimum: 30)), count: 3)
     @Binding var loadNextPage: Bool
     
     // MARK: - View
