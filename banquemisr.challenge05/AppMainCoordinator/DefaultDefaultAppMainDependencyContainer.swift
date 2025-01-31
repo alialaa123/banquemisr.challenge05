@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import Domain
+import Data
+import NetworkLayer
 
 class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
     // MARK: - Methods
@@ -16,6 +19,14 @@ class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
     }
     
     private func makeListOfMoviesViewModel() -> ListOfMoviesViewModel {
-        return ListOfMoviesViewModel()
+        return ListOfMoviesViewModel(listOfMovieUseCase: makeListOfMoviesUseCase())
+    }
+    
+    private func makeListOfMoviesUseCase() -> GetListOfMoviesUseCase {
+        DefaultGetListOfMoviesUseCase(repository: makeListOfMoviesRepository())
+    }
+    
+    private func makeListOfMoviesRepository() -> ListOfMoviesRepository {
+        DefaultGetGoldenPinBookingRemote(client: APIClient(baseURL: "https://api.themoviedb.org/3/movie/"))
     }
 }

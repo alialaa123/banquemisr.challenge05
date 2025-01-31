@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ListSwitcherView: View {
     // MARK: - Properties
-    @Binding var tabs: [String]
-    @Binding var selectedTab: String
+    var tabs = MainListOfMoviesTypes.allCases
+    @Binding var selectedTab: MainListOfMoviesTypes
     
     // MARK: - View
     var body: some View {
@@ -34,7 +34,7 @@ struct ListSwitcherView: View {
                         Button {
                             selectedTab = tab
                         } label: {
-                            Text(tab)
+                            Text(tab.title)
                                 .foregroundColor(.white)
                                 .fontWeight(selectedTab == tab ? .bold : .regular)
                         }
@@ -51,14 +51,12 @@ struct ListSwitcherView: View {
     }
     
     // MARK: - Method for offset animation
-    private func offset(for tab: String, in geometry: GeometryProxy) -> CGFloat {
+    private func offset(
+        for tab: MainListOfMoviesTypes,
+        in geometry: GeometryProxy
+    ) -> CGFloat {
         let index = CGFloat(tabs.firstIndex(of: tab) ?? 0)
         let tabWidth = geometry.size.width / CGFloat(tabs.count)
         return index * tabWidth
     }
-}
-
-
-#Preview {
-    ListSwitcherView(tabs: .constant(["Now", "Later"]), selectedTab: .constant("Now"))
 }

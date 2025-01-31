@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Domain
 
 struct ListOfMoviesView: View {
     // MARK: - State property
@@ -14,19 +15,33 @@ struct ListOfMoviesView: View {
     // MARK: - View
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            // App main header
             AppMainHeaderView(headerTitle: "BanqueMisr Entertainment")
             
+            // Tab Switcher
             ListSwitcherView(
-                tabs: $viewModel.tabs,
                 selectedTab: $viewModel.selectedTab
             )
             
-            Spacer()
+            // Grid of movies poster
+            GridOfMoviesListView(listOfMovies: $viewModel.listOfMovies) {
+                viewModel.loadNextPage()
+            }
+            
+            // Error view if found
+            if viewModel.shouldShowError {
+                ErrorMessageView(errorMessage: viewModel.errorMessage)
+            }
         }
+        .ignoresSafeArea(edges: .bottom)
         .padding(.horizontal)
+        .onReceive(viewModel.$selectedTab, perform: { newValue in
+            viewModel.resetAndLoad()
+        })
+        .onAppear {
+            Task {
+                await viewModel.getListOfMovies()
+            }
+        }
     }
-}
-
-#Preview {
-    ListOfMoviesView(viewModel: ListOfMoviesViewModel())
 }

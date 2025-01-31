@@ -1,8 +1,9 @@
 
 public protocol GetListOfMoviesUseCase {
     func execute(
-        with listType: String
-    ) async throws -> ListOfMovies
+        with listType: String,
+        page: Int
+    ) async throws -> [ListOfMovies]
 }
 
 public final class DefaultGetListOfMoviesUseCase: GetListOfMoviesUseCase {
@@ -16,8 +17,9 @@ public final class DefaultGetListOfMoviesUseCase: GetListOfMoviesUseCase {
 
     // MARK: - Methods
     public func execute(
-        with listType: String
-    ) async throws -> ListOfMovies {
-        return try await repository.getListOfMovies(with: listType)
+        with listType: String,
+        page: Int
+    ) async throws -> [ListOfMovies] {
+        return try await repository.getListOfMovies(with: listType, page: page)
     }
 }
