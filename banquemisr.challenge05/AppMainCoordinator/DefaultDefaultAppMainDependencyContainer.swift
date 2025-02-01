@@ -32,7 +32,7 @@ final class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
     }
     
     private func makeListOfMoviesRepository() -> ListOfMoviesRepository {
-        DefaultGetGoldenPinBookingRemote(client: APIClient(baseURL: "https://api.themoviedb.org/3/movie/"))
+        DefaultGetGoldenPinBookingRemote(client: APIClient(baseURL: AppConfig.baseURL))
     }
 }
 // MARK: - Movie Details screen

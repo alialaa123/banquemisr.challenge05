@@ -10,6 +10,7 @@
 		F176D1272D4BEFD600E21179 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = F176D1262D4BEFD600E21179 /* Domain */; };
 		F176D1292D4BEFDB00E21179 /* NetworkLayer in Frameworks */ = {isa = PBXBuildFile; productRef = F176D1282D4BEFDB00E21179 /* NetworkLayer */; };
 		F176D12D2D4BF1ED00E21179 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = F176D12C2D4BF1ED00E21179 /* Data */; };
+		F1F45EEA2D4E18AF0051BBC8 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1F45EE92D4E18AF0051BBC8 /* Config.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		F176D1222D4BEF3D00E21179 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		F176D1232D4BEF3D00E21179 /* NetworkLayer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NetworkLayer; sourceTree = "<group>"; };
 		F176D1242D4BEFBE00E21179 /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
+		F1F45EE92D4E18AF0051BBC8 /* Config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -87,6 +89,7 @@
 		F1276D562D4A748D005E283C = {
 			isa = PBXGroup;
 			children = (
+				F1F45EE92D4E18AF0051BBC8 /* Config.plist */,
 				F176D1242D4BEFBE00E21179 /* Data */,
 				F176D1222D4BEF3D00E21179 /* Domain */,
 				F176D1232D4BEF3D00E21179 /* NetworkLayer */,
@@ -238,6 +241,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1F45EEA2D4E18AF0051BBC8 /* Config.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
