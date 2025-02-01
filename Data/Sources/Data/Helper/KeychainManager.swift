@@ -21,7 +21,7 @@ struct KeychainManager {
     /// I wont go with this approach of init in struct and call storeToken func
     /// In real world situation I will get the token through API call and call keychain saveToken func
     /// with update its parameters to take the token value
-    private init() {
+    init() {
         do {
             try storeToken()
         } catch { }
@@ -31,7 +31,7 @@ struct KeychainManager {
     private func storeToken() throws {
         let key = "authToken"
         
-        if try KeychainManager.getToken(for: key) == nil {
+        if try getToken(for: key) == nil {
             let token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ZmRmNzFkMWEyNmEzYWYxY2I1NWIwZjJjMmRjMWQwMyIsIm5iZiI6MTczODI0MDQyMi42NzcsInN1YiI6IjY3OWI3MWE2MDRjOGRjMzQ3Y2ZiZGMzZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.NAc77J7KOcqLKFwV0HNCqDETFa0xAzq3l9M78Zur2Ws"
             saveToken(for: key, value: token)
         }
@@ -42,6 +42,7 @@ struct KeychainManager {
         
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: "com.tool.banquemisr.challenge05.banquemisr-challenge05",
             kSecAttrAccount as String: key,
             kSecValueData as String: data
         ]
@@ -56,7 +57,7 @@ struct KeychainManager {
         }
     }
     
-    static func getToken(for key: String) throws -> String? {
+    func getToken(for key: String) throws -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: "com.tool.banquemisr.challenge05.banquemisr-challenge05",
