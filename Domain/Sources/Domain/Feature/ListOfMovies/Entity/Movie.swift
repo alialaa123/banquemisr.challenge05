@@ -34,8 +34,8 @@ public struct Movie: Sendable, Hashable, Equatable {
     
     // MARK: - For View
     public var getImageURL: URL? {
-        let baseURLString = "https://image.tmdb.org/t/p/w500"
-        let fullURLString = "\(baseURLString)\(movieImage)"
+        let baseImageURL = ConfigHelper.imageBaseURL
+        let fullURLString = "\(baseImageURL)\(movieImage)"
         return URL(string: fullURLString)
     }
 }
