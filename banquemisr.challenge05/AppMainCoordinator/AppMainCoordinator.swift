@@ -7,8 +7,9 @@
 
 import UIKit
 import SwiftUI
+import Domain
 
-class AppMainCoordinator {
+final class AppMainCoordinator: MainListOfMovieAction {
     // MARK: - Properties
     private let navigationController: UINavigationController = UINavigationController()
     
@@ -24,9 +25,16 @@ class AppMainCoordinator {
     
     // MARK: - Methods
     func start() {
-        let rootView = dependencyContainer.makeListOfMoviesView()
+        let rootView = dependencyContainer.makeListOfMoviesView(with: self)
         navigationController.pushViewController(rootView, animated: false)
         navigationController.setNavigationBarHidden(true, animated: false)
         window.rootViewController = navigationController
+    }
+    
+    func showMovieDetails(for movie: Movie) {
+        let movieDetailsCoordinator = dependencyContainer
+            .makeMovieDetailDependencyContainer(with: navigationController)
+        
+        movieDetailsCoordinator.start(with: movie)
     }
 }

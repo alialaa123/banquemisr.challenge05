@@ -9,7 +9,7 @@ import Foundation
 import Domain
 import Combine
 
-class ListOfMoviesViewModel: ObservableObject {
+final class ListOfMoviesViewModel: ObservableObject {
     // MARK: - Properties
     /// Publishers
     @Published var selectedTab: MainListOfMoviesTypes = .nowPlaying
@@ -23,6 +23,9 @@ class ListOfMoviesViewModel: ObservableObject {
     @Published var isLoadNextPage: Bool = false
     @Published var currentPage = 1
     
+    /// Actions
+    let mainListOfMovieAction: MainListOfMovieAction
+    
     /// UseCases
     var listOfMovieUseCase: GetListOfMoviesUseCase
     
@@ -30,8 +33,12 @@ class ListOfMoviesViewModel: ObservableObject {
     private var cancellable = Set<AnyCancellable>()
     
     // MARK: - Life cycle
-    init(listOfMovieUseCase: GetListOfMoviesUseCase) {
+    init(
+        listOfMovieUseCase: GetListOfMoviesUseCase,
+        mainListOfMovieAction: MainListOfMovieAction
+    ) {
         self.listOfMovieUseCase = listOfMovieUseCase
+        self.mainListOfMovieAction = mainListOfMovieAction
         /// For Observe changes and do action through
         /// Using Combine better than go to Closure approach on the view to get the changes
         observeMovieSelection()
@@ -104,8 +111,7 @@ extension ListOfMoviesViewModel {
             .receive(on: RunLoop.main)
             .sink { [weak self] movieSelected in
                 guard let self, let movieSelected else { return }
-                // TODO: - Do the actual implementation of navigate to movie details through coordinator
-                print("DEBUG: User has select movie: \(movieSelected.movieTitle)")
+                mainListOfMovieAction.showMovieDetails(for: movieSelected)
             }
             .store(in: &cancellable)
     }

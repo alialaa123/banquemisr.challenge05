@@ -34,6 +34,8 @@ struct ListOfMoviesView: View {
             if viewModel.shouldShowError {
                 ErrorMessageView(errorMessage: viewModel.errorMessage)
             }
+            
+            Spacer()
         }
         .ignoresSafeArea(edges: .bottom)
         .padding(.horizontal)

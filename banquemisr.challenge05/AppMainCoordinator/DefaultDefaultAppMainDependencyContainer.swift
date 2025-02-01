@@ -10,16 +10,21 @@ import Domain
 import Data
 import NetworkLayer
 
-class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
+final class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
     // MARK: - Methods
-    func makeListOfMoviesView() -> UIHostingController<ListOfMoviesView> {
-        let viewModel = makeListOfMoviesViewModel()
+    func makeListOfMoviesView(
+        with confirmationAction: MainListOfMovieAction
+    ) -> UIHostingController<ListOfMoviesView> {
+        let viewModel = makeListOfMoviesViewModel(with: confirmationAction)
         let listOfMoviesView = ListOfMoviesView(viewModel: viewModel)
         return UIHostingController(rootView: listOfMoviesView)
     }
     
-    private func makeListOfMoviesViewModel() -> ListOfMoviesViewModel {
-        return ListOfMoviesViewModel(listOfMovieUseCase: makeListOfMoviesUseCase())
+    private func makeListOfMoviesViewModel(with confirmationAction: MainListOfMovieAction) -> ListOfMoviesViewModel {
+        return ListOfMoviesViewModel(
+            listOfMovieUseCase: makeListOfMoviesUseCase(),
+            mainListOfMovieAction: confirmationAction
+        )
     }
     
     private func makeListOfMoviesUseCase() -> GetListOfMoviesUseCase {
@@ -28,5 +33,20 @@ class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
     
     private func makeListOfMoviesRepository() -> ListOfMoviesRepository {
         DefaultGetGoldenPinBookingRemote(client: APIClient(baseURL: "https://api.themoviedb.org/3/movie/"))
+    }
+}
+// MARK: - Movie Details screen
+extension DefaultAppMainDependencyContainer {
+    func makeMovieDetailDependencyContainer(
+        with navigationController: UINavigationController
+    ) -> MovieDetailsCoordinator {
+        MovieDetailsCoordinator(
+            navigationController: navigationController,
+            movieDetailsDependencyContainer: makeMovieDetailsDependencyContainer()
+        )
+    }
+    
+    private func makeMovieDetailsDependencyContainer() -> MovieDetailsDependencyContainer {
+        DefaultMovieDetailsDependencyContainer()
     }
 }
