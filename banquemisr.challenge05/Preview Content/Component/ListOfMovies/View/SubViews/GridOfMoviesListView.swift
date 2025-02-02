@@ -20,7 +20,7 @@ struct GridOfMoviesListView: View {
         if let listOfMovies {
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: gridItems, spacing: 12) {
-                    ForEach(Array(listOfMovies.enumerated()), id: \.element.id) { index, movie in
+                    ForEach(Array(listOfMovies.enumerated()), id: \.offset) { index, movie in
                         MoviePosterView(moviePoster: movie.getImageURL)
                             .onTapGesture {
                                 movieSelected = movie

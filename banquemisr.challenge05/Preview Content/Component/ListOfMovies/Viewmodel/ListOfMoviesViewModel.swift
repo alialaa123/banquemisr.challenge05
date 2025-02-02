@@ -9,7 +9,6 @@ import Foundation
 import Domain
 import Data
 import Combine
-import CoreData
 
 final class ListOfMoviesViewModel: ObservableObject {
     // MARK: - Properties
@@ -46,6 +45,7 @@ final class ListOfMoviesViewModel: ObservableObject {
         self.listOfMovieUseCase = listOfMovieUseCase
         self.mainListOfMovieAction = mainListOfMovieAction
         self.movieCachedRepository = movieCachedRepository
+        loadCachedMovies()
         /// For Observe changes and do action through
         /// Using Combine better than go to Closure approach on the view to get the changes
         observeMovieSelection()
@@ -54,12 +54,16 @@ final class ListOfMoviesViewModel: ObservableObject {
     }
     
     // MARK: - Methods
-    @MainActor
-    func loadCachedMovies() async {
-        do {
-            listOfMovies = try await movieCachedRepository.fetchMovies()
-        } catch {
-            await getListOfMovies()
+    func loadCachedMovies() {
+        Task {
+            do {
+                let movies = try await movieCachedRepository.fetchMovies()
+                await MainActor.run {
+                    listOfMovies = movies
+                }
+            } catch {
+                await getListOfMovies()
+            }
         }
     }
     

@@ -39,10 +39,5 @@ struct ListOfMoviesView: View {
         }
         .ignoresSafeArea(edges: .bottom)
         .padding(.horizontal)
-        .onAppear {
-            Task {
-                await viewModel.loadCachedMovies()
-            }
-        }
     }
 }
