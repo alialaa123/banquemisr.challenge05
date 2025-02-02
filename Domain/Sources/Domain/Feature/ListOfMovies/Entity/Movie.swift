@@ -15,7 +15,7 @@ public struct Movie: Sendable, Hashable, Equatable {
     // MARK: - Properties
     public let id: Int
     public let movieTitle: String
-    private let movieImage: String
+    public let movieImage: String
     
     public static func == (lhs: Movie, rhs: Movie) -> Bool {
         lhs.id == rhs.id && lhs.movieTitle == rhs.movieTitle && lhs.movieImage == rhs.movieImage

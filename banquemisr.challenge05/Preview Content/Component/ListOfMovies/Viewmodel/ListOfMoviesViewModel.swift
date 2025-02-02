@@ -7,7 +7,9 @@
 
 import Foundation
 import Domain
+import Data
 import Combine
+import CoreData
 
 final class ListOfMoviesViewModel: ObservableObject {
     // MARK: - Properties
@@ -29,29 +31,51 @@ final class ListOfMoviesViewModel: ObservableObject {
     /// UseCases
     var listOfMovieUseCase: GetListOfMoviesUseCase
     
+    /// Persistent Data
+    let movieCachedRepository: MovieCachingRepository
+    
     /// AnyCancellable
     private var cancellable = Set<AnyCancellable>()
     
     // MARK: - Life cycle
     init(
         listOfMovieUseCase: GetListOfMoviesUseCase,
-        mainListOfMovieAction: MainListOfMovieAction
+        mainListOfMovieAction: MainListOfMovieAction,
+        movieCachedRepository: MovieCachingRepository
     ) {
         self.listOfMovieUseCase = listOfMovieUseCase
         self.mainListOfMovieAction = mainListOfMovieAction
+        self.movieCachedRepository = movieCachedRepository
         /// For Observe changes and do action through
         /// Using Combine better than go to Closure approach on the view to get the changes
         observeMovieSelection()
         observeLoadingNextPage()
+        observeListTypeChange()
     }
     
     // MARK: - Methods
+    @MainActor
+    func loadCachedMovies() async {
+        do {
+            listOfMovies = try await movieCachedRepository.fetchMovies()
+        } catch {
+            await getListOfMovies()
+        }
+    }
+    
     @MainActor
     func getListOfMovies() async {
         guard !isLoading else { return }
         isLoading = true
         do {
             let movies = try await listOfMovieUseCase.execute(with: selectedTab.rawValue, page: currentPage)
+            
+            /// I Put this limitation so it only cache first page & now_play only
+            /// other that I will need to dedicate duplicate movies in the caching so the list keep clean with no duplication
+            if selectedTab == .nowPlaying && currentPage == 1 {
+                try await movieCachedRepository.insertMovies(movies: movies)
+            }
+            
             if listOfMovies == nil {
                 listOfMovies = movies
             } else {
@@ -66,12 +90,22 @@ final class ListOfMoviesViewModel: ObservableObject {
         } catch {
             shouldShowError = true
             errorMessage = error.localizedDescription
+            if listOfMovies == nil {
+                do {
+                    listOfMovies = try await movieCachedRepository.fetchMovies()
+                } catch {
+                    shouldShowError = true
+                    errorMessage = error.localizedDescription
+                }
+            }
         }
         isLoading = false
     }
     
     func loadNextPage() {
         currentPage += 1
+        shouldShowError = false
+        errorMessage = nil
         Task {
             await getListOfMovies()
         }
@@ -112,6 +146,17 @@ extension ListOfMoviesViewModel {
             .sink { [weak self] movieSelected in
                 guard let self, let movieSelected else { return }
                 mainListOfMovieAction.showMovieDetails(for: movieSelected)
+            }
+            .store(in: &cancellable)
+    }
+    
+    func observeListTypeChange() {
+        $selectedTab
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] selectedTab in
+                guard let self else { return }
+                self.resetAndLoad()
             }
             .store(in: &cancellable)
     }

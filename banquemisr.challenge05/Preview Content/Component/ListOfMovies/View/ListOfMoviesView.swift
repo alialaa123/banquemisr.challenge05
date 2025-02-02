@@ -39,12 +39,9 @@ struct ListOfMoviesView: View {
         }
         .ignoresSafeArea(edges: .bottom)
         .padding(.horizontal)
-        .onReceive(viewModel.$selectedTab, perform: { newValue in
-            viewModel.resetAndLoad()
-        })
         .onAppear {
             Task {
-                await viewModel.getListOfMovies()
+                await viewModel.loadCachedMovies()
             }
         }
     }

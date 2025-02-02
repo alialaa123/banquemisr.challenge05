@@ -27,17 +27,15 @@ struct MoviePosterView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: posterHeight)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-            case .failure:
+            default:
                 Image(systemName: "photo")
                     .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity)
+                    .scaledToFit()
+                    .frame(minWidth: 30)
                     .frame(height: posterHeight)
                     .foregroundColor(.gray)
                     .background(Color.gray.opacity(0.2))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-            @unknown default:
-                EmptyView()
             }
         }
     }

@@ -23,7 +23,8 @@ final class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
     private func makeListOfMoviesViewModel(with confirmationAction: MainListOfMovieAction) -> ListOfMoviesViewModel {
         return ListOfMoviesViewModel(
             listOfMovieUseCase: makeListOfMoviesUseCase(),
-            mainListOfMovieAction: confirmationAction
+            mainListOfMovieAction: confirmationAction,
+            movieCachedRepository: makeMovieCachingRepository()
         )
     }
     
@@ -33,6 +34,10 @@ final class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
     
     private func makeListOfMoviesRepository() -> ListOfMoviesRepository {
         DefaultGetGoldenPinBookingRemote(client: APIClient(baseURL: AppConfig.baseURL))
+    }
+    
+    private func makeMovieCachingRepository() -> MovieCachingRepository {
+        DefaultMovieCachingRepository()
     }
 }
 // MARK: - Movie Details screen
