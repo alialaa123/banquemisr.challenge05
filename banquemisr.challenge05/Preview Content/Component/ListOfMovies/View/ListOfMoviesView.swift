@@ -18,26 +18,20 @@ struct ListOfMoviesView: View {
             // App main header
             AppMainHeaderView(headerTitle: "BanqueMisr Entertainment")
             
-            // Tab Switcher
-            ListSwitcherView(
-                selectedTab: $viewModel.selectedTab
-            )
-            
-            // Grid of movies poster
-            GridOfMoviesListView(
-                listOfMovies: $viewModel.listOfMovies,
-                movieSelected: $viewModel.movieSelected,
-                loadNextPage: $viewModel.isLoadNextPage
-            )
-            
-            // Error view if found
-            if viewModel.shouldShowError {
-                ErrorMessageView(errorMessage: viewModel.errorMessage)
+            ZStack(alignment: .top) {
+                // Grid of movies poster
+                GridOfMoviesListView(
+                    listOfMovies: $viewModel.listOfMovies,
+                    movieSelected: $viewModel.movieSelected,
+                    loadNextPage: $viewModel.isLoadNextPage
+                )
+                
+                // Error view if found
+                if viewModel.shouldShowError {
+                    ErrorMessageView(errorMessage: viewModel.errorMessage)
+                }
             }
-            
-            Spacer()
         }
-        .ignoresSafeArea(edges: .bottom)
         .padding(.horizontal)
     }
 }

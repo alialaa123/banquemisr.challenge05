@@ -16,7 +16,7 @@ enum MainListOfMoviesTypes: String, CaseIterable {
     var title: String {
            switch self {
            case .nowPlaying:
-               return "Now_Playing"
+               return "Now Playing"
            case .popular:
                return "Popular"
            case .upcoming:

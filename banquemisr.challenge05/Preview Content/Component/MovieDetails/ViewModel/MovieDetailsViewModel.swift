@@ -12,20 +12,49 @@ import Combine
 final class MovieDetailsViewModel: ObservableObject {
     // MARK: - Properties
     @Published var shouldDismiss: Bool = false
-    let movie: Movie
+    @Published var shouldShowError: Bool = false
+    @Published var errorMessage: String?
+    @Published var movie: Movie?
+    
     let movieDetailsAction: MovieDetailsAction
+    
+    /// UseCases
+    var movieDetailsUseCase: GetMovieDetailsUseCase
     
     /// AnyCancellable
     private var cancellable = Set<AnyCancellable>()
     
     // MARK: - Life cycle
-    init(movie: Movie, movieDetailsAction: MovieDetailsAction) {
-        self.movie = movie
+    init(
+        movieId: Int,
+        movieDetailsUseCase: GetMovieDetailsUseCase,
+        movieDetailsAction: MovieDetailsAction
+    ) {
+        self.movieDetailsUseCase = movieDetailsUseCase
         self.movieDetailsAction = movieDetailsAction
+        getMovieDetails(with: movieId)
         observateScreenDismiss()
     }
     
     // MARK: - Methods
+    func getMovieDetails(with movieId: Int) {
+        shouldShowError = false
+        Task {
+            do {
+                let movieDetails = try await movieDetailsUseCase.execute(with: movieId)
+                await MainActor.run {
+                    movie = movieDetails
+                }
+            } catch {
+                shouldShowError = true
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+}
+
+// MARK: - Observations Method
+extension MovieDetailsViewModel {
     func observateScreenDismiss() {
         $shouldDismiss
             .receive(on: RunLoop.main)

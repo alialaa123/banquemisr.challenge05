@@ -4,5 +4,6 @@
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="movieImage" optional="YES" attributeType="String"/>
         <attribute name="movieTitle" optional="YES" attributeType="String"/>
+        <attribute name="releaseDate" optional="YES" attributeType="String"/>
     </entity>
 </model>

@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Domain
+import Data
+import NetworkLayer
 
 final class DefaultMovieDetailsDependencyContainer: MovieDetailsDependencyContainer {
     func makeMovieDetailsView(
@@ -21,6 +23,18 @@ final class DefaultMovieDetailsDependencyContainer: MovieDetailsDependencyContai
         with movie: Movie,
         action: MovieDetailsAction
     ) -> MovieDetailsViewModel {
-        return MovieDetailsViewModel(movie: movie, movieDetailsAction: action)
+        return MovieDetailsViewModel(
+            movieId: movie.id,
+            movieDetailsUseCase: makeMovieDetailsUseCase(),
+            movieDetailsAction: action
+        )
+    }
+    
+    private func makeMovieDetailsUseCase() -> GetMovieDetailsUseCase {
+        DefaultGetMovieDetailsUseCase(repository: makeMovieDetailsRepository())
+    }
+    
+    private func makeMovieDetailsRepository() -> MovieDetailsRepository {
+        DefaultGetMovieDetailsRemote(client: APIClient(baseURL: AppConfig.baseURL))
     }
 }

@@ -13,36 +13,51 @@ struct MovieDetailsView: View {
     
     // MARK: - View
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading) {
             ZStack(alignment: .top) {
                 MoviePosterView(
-                    moviePoster: viewModel.movie.getImageURL,
+                    moviePoster: viewModel.movie?.getImageURL,
                     posterHeight: 600
                 )
                 
                 InternalHeaderView(buttonAction: $viewModel.shouldDismiss)
+                
+                // Error view if found
+                if viewModel.shouldShowError {
+                    ErrorMessageView(errorMessage: viewModel.errorMessage)
+                        .padding(.top, 100)
+                }
             }
-            
-            bottomInformationContext
+            if viewModel.movie != nil {
+                InformationView(
+                    informationToShow: [
+                        MovieInformationPresentationModel(
+                            iconImage: "popcorn",
+                            text: viewModel.movie?.movieTitle ?? ""
+                        ),
+                        MovieInformationPresentationModel(
+                            iconImage: "calendar.badge.clock",
+                            text: viewModel.movie?.releaseDate ?? ""
+                        ),
+                        MovieInformationPresentationModel(
+                            iconImage: "timer",
+                            text: viewModel.movie?.getMovieDuration ?? ""
+                        ),
+                        MovieInformationPresentationModel(
+                            iconImage: "list.bullet.clipboard",
+                            text: viewModel.movie?.getGenresString ?? ""
+                        )
+                    ]
+                )
+                .padding()
+                .background(Color.black)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding(.vertical, 6)
+                .padding(.horizontal)
+            }
             
             Spacer()
         }
         .ignoresSafeArea(.all)
-    }
-    
-    // MARK: - Bottom Information Context
-    var bottomInformationContext: some View {
-        HStack(alignment: .center, spacing: 0) {
-            Spacer()
-            Image(systemName: "popcorn")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 20, height: 20)
-            
-            Text(viewModel.movie.movieTitle)
-                .font(.system(size: 24, weight: .bold, design: .default))
-                .padding()
-            Spacer()
-        }
     }
 }

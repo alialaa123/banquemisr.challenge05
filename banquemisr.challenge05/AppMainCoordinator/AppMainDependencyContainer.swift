@@ -8,12 +8,5 @@
 import SwiftUI
 
 protocol AppMainDependencyContainer {
-    func makeListOfMoviesView(
-        with confirmationAction: MainListOfMovieAction
-    ) -> UIHostingController<ListOfMoviesView>
-    
-    func makeMovieDetailDependencyContainer(
-        with navigationController: UINavigationController
-    ) -> MovieDetailsCoordinator
-        
+    var tabBarController: UITabBarController { get }
 }

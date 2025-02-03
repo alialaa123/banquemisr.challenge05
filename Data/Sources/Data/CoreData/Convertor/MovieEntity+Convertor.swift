@@ -5,7 +5,6 @@
 //  Created by ali alaa on 02/02/2025.
 //
 
-import CoreData
 import Domain
 
 /// Maps the object from `Movie` to `MovieEntity` .
@@ -15,6 +14,7 @@ extension MovieEntity {
         entity.id = Int32(context.id)
         entity.movieTitle = context.movieTitle
         entity.movieImage = context.movieImage
+        entity.releaseDate = context.releaseDate
         return entity
     }
     
@@ -22,7 +22,8 @@ extension MovieEntity {
         return .init(
             id: Int(id),
             movieTitle: movieTitle,
-            movieImage: movieImage
+            movieImage: movieImage,
+            releaseDate: releaseDate
         )
     }
 }

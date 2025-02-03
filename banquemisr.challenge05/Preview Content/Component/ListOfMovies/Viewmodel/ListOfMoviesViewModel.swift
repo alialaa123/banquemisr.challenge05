@@ -13,7 +13,7 @@ import Combine
 final class ListOfMoviesViewModel: ObservableObject {
     // MARK: - Properties
     /// Publishers
-    @Published var selectedTab: MainListOfMoviesTypes = .nowPlaying
+    @Published var selectedTab: MainListOfMoviesTypes
     @Published var listOfMovies: [Movie]?
     @Published var movieSelected: Movie?
     
@@ -38,10 +38,12 @@ final class ListOfMoviesViewModel: ObservableObject {
     
     // MARK: - Life cycle
     init(
+        selectedTab: MainListOfMoviesTypes,
         listOfMovieUseCase: GetListOfMoviesUseCase,
         mainListOfMovieAction: MainListOfMovieAction,
         movieCachedRepository: MovieCachingRepository
     ) {
+        self.selectedTab = selectedTab
         self.listOfMovieUseCase = listOfMovieUseCase
         self.mainListOfMovieAction = mainListOfMovieAction
         self.movieCachedRepository = movieCachedRepository
@@ -56,6 +58,9 @@ final class ListOfMoviesViewModel: ObservableObject {
     // MARK: - Methods
     func loadCachedMovies() {
         Task {
+            guard selectedTab == .nowPlaying else {
+                return await getListOfMovies()
+            }
             do {
                 let movies = try await movieCachedRepository.fetchMovies()
                 await MainActor.run {
@@ -67,10 +72,9 @@ final class ListOfMoviesViewModel: ObservableObject {
         }
     }
     
-    @MainActor
     func getListOfMovies() async {
-        guard !isLoading else { return }
-        isLoading = true
+//        guard !isLoading else { return }
+//        isLoading = true
         do {
             let movies = try await listOfMovieUseCase.execute(with: selectedTab.rawValue, page: currentPage)
             
@@ -80,30 +84,35 @@ final class ListOfMoviesViewModel: ObservableObject {
                 try await movieCachedRepository.insertMovies(movies: movies)
             }
             
-            if listOfMovies == nil {
-                listOfMovies = movies
-            } else {
-                /// this approach based on that maybe an duplication in movies on different pages
-                /// which will lead to not crashing as listOfMovies is Hashable & Equatable
-                /// but it will lead to show and empty space in view as the duplicate item will not load in view
-                /// so I take this approach of NSOrderedSet as Set so items wont be duplicate and also ordered not losing the order of items
-                let allMovies = (listOfMovies ?? []) + movies
-                let nonDuplicatesMovies = NSOrderedSet(array: allMovies).array as? [Movie]
-                listOfMovies = nonDuplicatesMovies
+            await MainActor.run {
+                if listOfMovies == nil {
+                    listOfMovies = movies
+                } else {
+                    /// this approach based on that maybe an duplication in movies on different pages
+                    /// which will lead to not crashing as listOfMovies is Hashable & Equatable
+                    /// but it will lead to show and empty space in view as the duplicate item will not load in view
+                    /// so I take this approach of NSOrderedSet as Set so items wont be duplicate and also ordered not losing the order of items
+                    let allMovies = (listOfMovies ?? []) + movies
+                    let nonDuplicatesMovies = NSOrderedSet(array: allMovies).array as? [Movie]
+                    listOfMovies = nonDuplicatesMovies
+                }
             }
         } catch {
-            shouldShowError = true
-            errorMessage = error.localizedDescription
             if listOfMovies == nil {
                 do {
-                    listOfMovies = try await movieCachedRepository.fetchMovies()
+                    let movies = try await movieCachedRepository.fetchMovies()
+                    await MainActor.run {
+                        listOfMovies = movies
+                    }
                 } catch {
-                    shouldShowError = true
-                    errorMessage = error.localizedDescription
+                    await MainActor.run {
+                        shouldShowError = true
+                        errorMessage = error.localizedDescription
+                    }
                 }
             }
         }
-        isLoading = false
+//        isLoading = false
     }
     
     func loadNextPage() {

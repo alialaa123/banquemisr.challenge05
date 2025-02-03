@@ -32,7 +32,6 @@ public final class DefaultMovieCachingRepository: Sendable, MovieCachingReposito
     }
 
     public func insertMovies(movies: [Movie]) async throws {
-        guard try await shouldInsertMovie() else { return }
         for movie in movies {
             guard let movieEntity: MovieEntity = try await coreDataManager.insert(MovieEntity.self) else {
                 return
@@ -40,11 +39,5 @@ public final class DefaultMovieCachingRepository: Sendable, MovieCachingReposito
             _ = movieEntity.toManagedObject(context: movie)
         }
         try await coreDataManager.save()
-    }
-    
-    private func shouldInsertMovie() async throws -> Bool {
-        let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
-        let movies = try await coreDataManager.fetch(request)
-        return movies.isEmpty
     }
 }

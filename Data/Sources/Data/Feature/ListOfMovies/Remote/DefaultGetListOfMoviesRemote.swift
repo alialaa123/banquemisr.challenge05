@@ -3,7 +3,7 @@ import Foundation
 import Domain
 import NetworkLayer
 
-public final class DefaultGetGoldenPinBookingRemote: ListOfMoviesRepository {
+public final class DefaultGetListOfMoviesRemote: ListOfMoviesRepository {
     // MARK: - Properties
     private let client: NetworkClient
     

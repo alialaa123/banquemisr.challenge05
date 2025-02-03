@@ -9,32 +9,24 @@ import UIKit
 import SwiftUI
 import Domain
 
-final class AppMainCoordinator: MainListOfMovieAction {
+final class AppMainCoordinator {
     // MARK: - Properties
     private let navigationController: UINavigationController = UINavigationController()
     
     // Long-lived Properties
     private let window: UIWindow
     private let dependencyContainer: AppMainDependencyContainer
+    private let tabBarController: UITabBarController
     
     // MARK: - Life cycle
     init(window: UIWindow, dependencyContainer: AppMainDependencyContainer) {
         self.window = window
         self.dependencyContainer = dependencyContainer
+        self.tabBarController = dependencyContainer.tabBarController
     }
     
     // MARK: - Methods
     func start() {
-        let rootView = dependencyContainer.makeListOfMoviesView(with: self)
-        navigationController.pushViewController(rootView, animated: false)
-        navigationController.setNavigationBarHidden(true, animated: false)
-        window.rootViewController = navigationController
-    }
-    
-    func showMovieDetails(for movie: Movie) {
-        let movieDetailsCoordinator = dependencyContainer
-            .makeMovieDetailDependencyContainer(with: navigationController)
-        
-        movieDetailsCoordinator.start(with: movie)
+        window.rootViewController = tabBarController
     }
 }

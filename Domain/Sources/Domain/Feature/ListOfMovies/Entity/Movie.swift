@@ -16,6 +16,9 @@ public struct Movie: Sendable, Hashable, Equatable {
     public let id: Int
     public let movieTitle: String
     public let movieImage: String
+    public let releaseDate: String
+    public var runtime: Int?
+    public var genres: [MovieGenre]?
     
     public static func == (lhs: Movie, rhs: Movie) -> Bool {
         lhs.id == rhs.id && lhs.movieTitle == rhs.movieTitle && lhs.movieImage == rhs.movieImage
@@ -25,11 +28,17 @@ public struct Movie: Sendable, Hashable, Equatable {
     public init(
         id: Int,
         movieTitle: String,
-        movieImage: String
+        movieImage: String,
+        releaseDate: String,
+        runtime: Int? = nil,
+        genres: [MovieGenre]? = nil
     ) {
         self.id = id
         self.movieTitle = movieTitle
         self.movieImage = movieImage
+        self.releaseDate = releaseDate
+        self.runtime = runtime
+        self.genres = genres
     }
     
     // MARK: - For View
@@ -37,5 +46,15 @@ public struct Movie: Sendable, Hashable, Equatable {
         let baseImageURL = ConfigHelper.imageBaseURL
         let fullURLString = "\(baseImageURL)\(movieImage)"
         return URL(string: fullURLString)
+    }
+    
+    public var getGenresString: String {
+        guard let genres = genres else { return "" }
+        return genres.map(\.name).joined(separator: ", ")
+    }
+    
+    public var getMovieDuration: String {
+        guard let runtime = runtime else { return "" }
+        return "\(runtime) min"
     }
 }
