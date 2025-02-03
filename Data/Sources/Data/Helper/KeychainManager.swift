@@ -8,20 +8,26 @@
 import Foundation
 import Security
 
+/// For test purpose, needed to create protocol for keychain Manager,
+/// so in test cases I can inject with mockKeyChainManager
+public protocol KeychainManager {
+    func getToken(for key: String) throws -> String?
+}
+
 /// I go with struct as more functional approach
 /// In other scenarios I may go with final class and singleton but it will require confirm of Sendable
 /// for swift concurrency thread safe as singleton will be accessed from multiple threads which lead to race condition
 /// and for simple task I would go easy with confirmation of sendable or the obsessed of declare @unchecked Sendable which will tell
 /// compiler don't worry I'm take care of it
 /// Final approach is to go with actor for concurrency safety, but it is overhead to use on Keychain, as Keychain framework API is already sync
-struct KeychainManager {
+public struct DefaultKeychainManager: KeychainManager {
     
     // MARK: - init
     /// for production and real token in real world situation
     /// I wont go with this approach of init in struct and call storeToken func
     /// In real world situation I will get the token through API call and call keychain saveToken func
     /// with update its parameters to take the token value
-    init() {
+    public init() {
         do {
             try storeToken()
         } catch { }
@@ -57,7 +63,7 @@ struct KeychainManager {
         }
     }
     
-    func getToken(for key: String) throws -> String? {
+    public func getToken(for key: String) throws -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: "com.tool.banquemisr.challenge05.banquemisr-challenge05",

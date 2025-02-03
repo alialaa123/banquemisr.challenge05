@@ -12,15 +12,20 @@ import NetworkLayer
 public final class DefaultGetMovieDetailsRemote: MovieDetailsRepository {
     // MARK: - Properties
     private let client: NetworkClient
+    private let keyChainManager: KeychainManager
     
     // MARK: - Life cycle
-    public init(client: NetworkClient) {
+    public init(
+        client: NetworkClient,
+        keyChainManager: KeychainManager = DefaultKeychainManager()
+    ) {
         self.client = client
+        self.keyChainManager = keyChainManager
     }
     
     // MARK: - Methods
     public func getMovieDetails(with movieID: Int) async throws -> Movie {
-        let token = try KeychainManager().getToken(for: "authToken") ?? ""
+        let token = try keyChainManager.getToken(for: "authToken") ?? ""
         let request = MovieDetailsRequest(
             path: "\(movieID)",
             authToken: token
