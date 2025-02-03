@@ -10,7 +10,7 @@ import Domain
 
 protocol MovieDetailsDependencyContainer {
     func makeMovieDetailsView(
-        with movie: Movie,
+        with movieId: Int,
         action: MovieDetailsAction
     ) -> UIHostingController<MovieDetailsView>
 }

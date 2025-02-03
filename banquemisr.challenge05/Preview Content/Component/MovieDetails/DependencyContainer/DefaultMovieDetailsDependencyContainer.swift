@@ -12,19 +12,19 @@ import NetworkLayer
 
 final class DefaultMovieDetailsDependencyContainer: MovieDetailsDependencyContainer {
     func makeMovieDetailsView(
-        with movie: Movie,
+        with movieId: Int,
         action: MovieDetailsAction
     ) -> UIHostingController<MovieDetailsView> {
-        let viewModel = makeMovieDetailsViewModel(with: movie, action: action)
+        let viewModel = makeMovieDetailsViewModel(with: movieId, action: action)
         return UIHostingController(rootView: MovieDetailsView(viewModel: viewModel))
     }
     
     private func makeMovieDetailsViewModel(
-        with movie: Movie,
+        with movieId: Int,
         action: MovieDetailsAction
     ) -> MovieDetailsViewModel {
         return MovieDetailsViewModel(
-            movieId: movie.id,
+            movieId: movieId,
             movieDetailsUseCase: makeMovieDetailsUseCase(),
             movieDetailsAction: action
         )

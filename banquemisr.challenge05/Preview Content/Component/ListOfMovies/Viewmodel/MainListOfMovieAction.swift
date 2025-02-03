@@ -9,5 +9,5 @@ import Foundation
 import Domain
 
 protocol MainListOfMovieAction: AnyObject {
-    func showMovieDetails(for movie: Movie)
+    func showMovieDetails(for movieId: Int)
 }

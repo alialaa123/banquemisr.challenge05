@@ -158,7 +158,7 @@ extension ListOfMoviesViewModel {
             .receive(on: RunLoop.main)
             .sink { [weak self] movieSelected in
                 guard let self, let movieSelected else { return }
-                mainListOfMovieAction.showMovieDetails(for: movieSelected)
+                mainListOfMovieAction.showMovieDetails(for: movieSelected.id)
             }
             .store(in: &cancellable)
     }

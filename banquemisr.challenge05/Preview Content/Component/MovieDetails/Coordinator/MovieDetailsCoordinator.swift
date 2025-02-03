@@ -23,8 +23,8 @@ final class MovieDetailsCoordinator {
     }
     
     // MARK: - Methods
-    func start(with movie: Movie) {
-        let rootView = movieDetailsDependencyContainer.makeMovieDetailsView(with: movie, action: self)
+    func start(with movieId: Int) {
+        let rootView = movieDetailsDependencyContainer.makeMovieDetailsView(with: movieId, action: self)
         navigationController.pushViewController(rootView, animated: true)
     }
 }

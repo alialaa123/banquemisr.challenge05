@@ -39,11 +39,11 @@ final class ListOfMoviesCoordinator {
 
 // MARK: - Delegate Action
 extension ListOfMoviesCoordinator: MainListOfMovieAction {
-    func showMovieDetails(for movie: Movie) {
+    func showMovieDetails(for movieId: Int) {
         guard let navigationController else { return }
         let movieDetailsCoordinator = dependencyContainer
             .makeMovieDetailDependencyContainer(with: navigationController)
         
-        movieDetailsCoordinator.start(with: movie)
+        movieDetailsCoordinator.start(with: movieId)
     }
 }
