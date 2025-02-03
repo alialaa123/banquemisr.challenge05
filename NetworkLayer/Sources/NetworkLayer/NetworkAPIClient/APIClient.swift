@@ -4,13 +4,13 @@ import Foundation
 public final class APIClient: NetworkClient {
     // MARK: - Properties
     private let baseURL: String
-    private let session: URLSession
+    private let session: URLSessionProtocol
     private let jsonDecoder: JSONDecoder
     
     // MARK: - Life cycle
     public init(
         baseURL: String,
-        session: URLSession = URLSession.shared,
+        session: URLSessionProtocol = URLSession.shared,
         jsonDecoder: JSONDecoder = JSONDecoder()
     ) {
         self.baseURL = baseURL
@@ -41,6 +41,7 @@ public final class APIClient: NetworkClient {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = request.headers
+        urlRequest.timeoutInterval = 10
         
         // Check if request is POST
         // Encode body for POST Methods
@@ -82,5 +83,4 @@ public final class APIClient: NetworkClient {
         try validate(response: response, data: data)
         return try decode(data: data, for: T.Response.self)
     }
-    
 }
