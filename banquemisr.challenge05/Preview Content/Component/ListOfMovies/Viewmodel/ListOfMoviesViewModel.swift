@@ -20,7 +20,6 @@ final class ListOfMoviesViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var shouldShowError: Bool = false
     
-    @Published var isLoading: Bool = false
     @Published var isLoadNextPage: Bool = false
     @Published var currentPage = 1
     
@@ -30,9 +29,6 @@ final class ListOfMoviesViewModel: ObservableObject {
     /// UseCases
     var listOfMovieUseCase: GetListOfMoviesUseCase
     
-    /// Persistent Data
-    let movieCachedRepository: MovieCachingRepository
-    
     /// AnyCancellable
     private var cancellable = Set<AnyCancellable>()
     
@@ -40,14 +36,12 @@ final class ListOfMoviesViewModel: ObservableObject {
     init(
         selectedTab: MainListOfMoviesTypes,
         listOfMovieUseCase: GetListOfMoviesUseCase,
-        mainListOfMovieAction: MainListOfMovieAction,
-        movieCachedRepository: MovieCachingRepository
+        mainListOfMovieAction: MainListOfMovieAction
     ) {
         self.selectedTab = selectedTab
         self.listOfMovieUseCase = listOfMovieUseCase
         self.mainListOfMovieAction = mainListOfMovieAction
-        self.movieCachedRepository = movieCachedRepository
-        loadCachedMovies()
+        getListOfMovies()
         /// For Observe changes and do action through
         /// Using Combine better than go to Closure approach on the view to get the changes
         observeMovieSelection()
@@ -56,79 +50,43 @@ final class ListOfMoviesViewModel: ObservableObject {
     }
     
     // MARK: - Methods
-    func loadCachedMovies() {
+    func getListOfMovies() {
         Task {
-            guard selectedTab == .nowPlaying else {
-                return await getListOfMovies()
-            }
             do {
-                let movies = try await movieCachedRepository.fetchMovies()
+                let movies = try await listOfMovieUseCase.execute(with: selectedTab.rawValue, page: currentPage)
+                
                 await MainActor.run {
-                    listOfMovies = movies
+                    if listOfMovies == nil {
+                        listOfMovies = movies
+                    } else {
+                        /// this approach based on that maybe an duplication in movies on different pages
+                        /// which will lead to not crashing as listOfMovies is Hashable & Equatable
+                        /// but it will lead to show and empty space in view as the duplicate item will not load in view
+                        /// so I take this approach of NSOrderedSet as Set so items wont be duplicate and also ordered not losing the order of items
+                        let allMovies = (listOfMovies ?? []) + movies
+                        let nonDuplicatesMovies = NSOrderedSet(array: allMovies).array as? [Movie]
+                        listOfMovies = nonDuplicatesMovies
+                    }
                 }
             } catch {
-                await getListOfMovies()
-            }
-        }
-    }
-    
-    func getListOfMovies() async {
-//        guard !isLoading else { return }
-//        isLoading = true
-        do {
-            let movies = try await listOfMovieUseCase.execute(with: selectedTab.rawValue, page: currentPage)
-            
-            /// I Put this limitation so it only cache first page & now_play only
-            /// other that I will need to dedicate duplicate movies in the caching so the list keep clean with no duplication
-            if selectedTab == .nowPlaying && currentPage == 1 {
-                try await movieCachedRepository.insertMovies(movies: movies)
-            }
-            
-            await MainActor.run {
-                if listOfMovies == nil {
-                    listOfMovies = movies
-                } else {
-                    /// this approach based on that maybe an duplication in movies on different pages
-                    /// which will lead to not crashing as listOfMovies is Hashable & Equatable
-                    /// but it will lead to show and empty space in view as the duplicate item will not load in view
-                    /// so I take this approach of NSOrderedSet as Set so items wont be duplicate and also ordered not losing the order of items
-                    let allMovies = (listOfMovies ?? []) + movies
-                    let nonDuplicatesMovies = NSOrderedSet(array: allMovies).array as? [Movie]
-                    listOfMovies = nonDuplicatesMovies
-                }
-            }
-        } catch {
-            if listOfMovies == nil {
-                do {
-                    let movies = try await movieCachedRepository.fetchMovies()
-                    await MainActor.run {
-                        listOfMovies = movies
-                    }
-                } catch {
-                    await MainActor.run {
-                        shouldShowError = true
-                        errorMessage = error.localizedDescription
-                    }
+                await MainActor.run {
+                    shouldShowError = true
+                    errorMessage = error.localizedDescription
                 }
             }
         }
-//        isLoading = false
     }
     
     func loadNextPage() {
         currentPage += 1
         shouldShowError = false
         errorMessage = nil
-        Task {
-            await getListOfMovies()
-        }
+        getListOfMovies()
     }
     
     func resetAndLoad() {
         reset()
-        Task {
-            await getListOfMovies()
-        }
+        getListOfMovies()
     }
     
     private func reset() {

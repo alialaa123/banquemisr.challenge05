@@ -9,10 +9,15 @@ public protocol GetListOfMoviesUseCase {
 public final class DefaultGetListOfMoviesUseCase: GetListOfMoviesUseCase {
     // MARK: - Properties
     private let repository: ListOfMoviesRepository
-
+    private let cachingRepository: GetListOfMoviesCachingRepository & InsertMoviesIntoCachingRepository
+    
     // MARK: - Life cycle
-    public init(repository: ListOfMoviesRepository) {
+    public init(
+        repository: ListOfMoviesRepository,
+        cachingRepository: GetListOfMoviesCachingRepository & InsertMoviesIntoCachingRepository
+    ) {
         self.repository = repository
+        self.cachingRepository = cachingRepository
     }
 
     // MARK: - Methods
@@ -20,6 +25,17 @@ public final class DefaultGetListOfMoviesUseCase: GetListOfMoviesUseCase {
         with listType: String,
         page: Int
     ) async throws -> [Movie] {
-        return try await repository.getListOfMovies(with: listType, page: page)
+        do {
+            let movies = try await repository.getListOfMovies(with: listType, page: page)
+            if listType == "now_playing" && page == 1 {
+                try await cachingRepository.insertMovies(movies: movies)
+            }
+            return movies
+        } catch {
+            if let cachedMovies = try? await cachingRepository.fetchMovies() {
+                return cachedMovies
+            }
+            throw error
+        }
     }
 }

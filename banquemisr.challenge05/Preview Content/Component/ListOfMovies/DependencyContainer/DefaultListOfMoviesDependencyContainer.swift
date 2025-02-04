@@ -28,20 +28,22 @@ final class DefaultListOfMoviesDependencyContainer: ListOfMoviesDependencyContai
         return ListOfMoviesViewModel(
             selectedTab: selectedTab,
             listOfMovieUseCase: makeListOfMoviesUseCase(),
-            mainListOfMovieAction: confirmationAction,
-            movieCachedRepository: makeMovieCachingRepository()
+            mainListOfMovieAction: confirmationAction
         )
     }
     
     private func makeListOfMoviesUseCase() -> GetListOfMoviesUseCase {
-        DefaultGetListOfMoviesUseCase(repository: makeListOfMoviesRepository())
+        DefaultGetListOfMoviesUseCase(
+            repository: makeListOfMoviesRepository(),
+            cachingRepository: makeMovieCachingRepository()
+        )
     }
     
     private func makeListOfMoviesRepository() -> ListOfMoviesRepository {
         DefaultGetListOfMoviesRemote(client: APIClient(baseURL: AppConfig.baseURL))
     }
     
-    private func makeMovieCachingRepository() -> MovieCachingRepository {
+    private func makeMovieCachingRepository() -> GetListOfMoviesCachingRepository & InsertMoviesIntoCachingRepository {
         DefaultMovieCachingRepository()
     }
 }

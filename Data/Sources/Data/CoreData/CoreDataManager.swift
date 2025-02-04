@@ -52,6 +52,7 @@ public final class CoreDataManager: Sendable {
         let context = persistentContainer.viewContext
         return try await context.perform {
             let newObject = NSEntityDescription.insertNewObject(forEntityName: String(describing: type), into: context) as? T
+            try context.save()
             return newObject
         }
     }

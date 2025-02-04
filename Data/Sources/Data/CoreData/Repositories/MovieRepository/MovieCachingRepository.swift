@@ -9,12 +9,7 @@ import Foundation
 import CoreData
 import Domain
 
-public protocol MovieCachingRepository {
-    func fetchMovies() async throws -> [Movie]
-    func insertMovies(movies: [Movie]) async throws
-}
-
-public final class DefaultMovieCachingRepository: Sendable, MovieCachingRepository {
+public final class DefaultMovieCachingRepository: Sendable, InsertMoviesIntoCachingRepository, GetListOfMoviesCachingRepository {
     // MARK: - Properties
     private let coreDataManager = CoreDataManager.shared
     

@@ -18,13 +18,13 @@ struct MoviePosterView: View {
             switch phase {
             case .empty:
                 ProgressView()
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: UIScreen.main.bounds.width)
                     .frame(height: posterHeight)
             case .success(let image):
                 image
                     .resizable()
                     .scaledToFill()
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: UIScreen.main.bounds.width)
                     .frame(height: posterHeight)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             default:
