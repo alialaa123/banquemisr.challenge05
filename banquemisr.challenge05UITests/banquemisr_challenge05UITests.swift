@@ -30,14 +30,14 @@ final class banquemisr_challenge05UITests: XCTestCase {
 
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
-
-    @MainActor
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
+    
+    func testLaunchPerformance() {
+        let app = XCUIApplication()
+        app.launch()
+        let element = app.scrollViews.children(matching: .other).element.children(matching: .other).element
+        element.swipeUp()
+        element.swipeUp()
+        element.swipeUp()
+        element.tap()        
     }
 }
