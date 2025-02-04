@@ -5,12 +5,17 @@ class DefaultGetListOfMoviesUseCaseTests: XCTestCase {
     // MARK: - SUB
     var useCase: DefaultGetListOfMoviesUseCase!
     var mockRepository: MockListOfMoviesRepository!
+    var mockCachingRepository: MockCachingRepository!
     
     // MARK: - Setup & tearDown
     override func setUp() {
         super.setUp()
         mockRepository = MockListOfMoviesRepository()
-        useCase = DefaultGetListOfMoviesUseCase(repository: mockRepository)
+        mockCachingRepository = MockCachingRepository()
+        useCase = DefaultGetListOfMoviesUseCase(
+            repository: mockRepository,
+            cachingRepository: mockCachingRepository
+        )
     }
     
     override func tearDown() {
@@ -20,7 +25,7 @@ class DefaultGetListOfMoviesUseCaseTests: XCTestCase {
     }
     
     // MARK: - Test cases
-    func testExecute_success() async {
+    func testExecute_WithValid_Request_ReturnExpectedMovies() async {
         // Arrange
         let expectedMovies: [Movie] = [
             Movie(id: 1, movieTitle: "Ali", movieImage: "001.jpg", releaseDate: "01-01-2025"),
@@ -39,7 +44,7 @@ class DefaultGetListOfMoviesUseCaseTests: XCTestCase {
         }
     }
     
-    func testExecuteWithTypeScreen_success() async {
+    func testExecute_WithTypeScreen_ReturnExpectedListType() async {
         // Arrange
         mockRepository.getListOfMoviesResult = .success([])
         
@@ -56,10 +61,12 @@ class DefaultGetListOfMoviesUseCaseTests: XCTestCase {
     }
     
     
-    func testExecute_failure() async {
+    func testExecute_WithError_ReturnExpectedError() async {
         // Arrange
         let expectedError = NSError(domain: "Test Error", code: 1, userInfo: nil)
+        
         mockRepository.getListOfMoviesResult = .failure(expectedError)
+        mockCachingRepository.getListOfMoviesResult = .failure(expectedError)
         
         // Act
         do {
