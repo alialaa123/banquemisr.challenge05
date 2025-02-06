@@ -5,10 +5,7 @@
 //  Created by ali alaa on 30/01/2025.
 //
 
-import SwiftUI
-import Domain
-import Data
-import NetworkLayer
+import UIKit
 
 final class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
     // MARK: - Properties
@@ -18,10 +15,8 @@ final class DefaultAppMainDependencyContainer: AppMainDependencyContainer {
     
     var tabBarController: UITabBarController {
         let tabBar = DefaultTabBarFactory([
-//            nowPlayingMovieFactory,
-            NowPlayingTabBarFactory(),
-            PopularTabBarFactory(),
-//            popularMovieFactory,
+            nowPlayingMovieFactory,
+            popularMovieFactory,
             upcomingMovieFactory
         ])
         return tabBar.makeTabBar()

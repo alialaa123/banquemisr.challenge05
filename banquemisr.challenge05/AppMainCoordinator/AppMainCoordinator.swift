@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import SwiftUI
-import Domain
 
 final class AppMainCoordinator {
     // MARK: - Properties
